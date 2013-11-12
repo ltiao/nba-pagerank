@@ -9,6 +9,7 @@ with open("teams_config.yaml", 'r') as infile:
 
 r = requests.get('http://stats.nba.com/stats/leaguedashteamstats', params=payload)
 raw_result = r.json()
-#print raw_result
-#pprint.pprint(raw_result)
+header = raw_result[u'resultSets'][-1][u'headers'][1:]
+print header
+exit(0)
 print dict(row[:2] for row in raw_result[u'resultSets'][-1][u'rowSet'])
