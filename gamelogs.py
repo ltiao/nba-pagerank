@@ -10,7 +10,6 @@ with open("teams_config.yaml", 'r') as infile:
 r = requests.get('http://stats.nba.com/stats/leaguedashteamstats', params=payload)
 raw_result = r.json()
 headers = [h.lower() for h in raw_result[u'resultSets'][-1][u'headers'][1:]] # omit the 'TEAM_ID' header and convert everything to lowercase
-
-team_stats = dict(zip(row[0], dict(zip(headers, row[1:]))) for row in raw_result[u'resultSets'][-1][u'rowSet'])
+team_stats = dict((row[0], dict(zip(headers, row[1:]))) for row in raw_result[u'resultSets'][-1][u'rowSet'])
 
 pprint.pprint(team_stats)
