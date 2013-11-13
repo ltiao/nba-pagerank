@@ -2,7 +2,7 @@
 
 import requests, requests_cache, pprint, yaml
 
-requests_cache.install_cache('gamelog_cache')
+requests_cache.install_cache('gamelog_cache', expire_after=24*60*60) # 1 day
 
 def preprocess(raw_dict, identifier=0):
     """
@@ -30,11 +30,14 @@ def team_gamelog(team_id, season, season_type='Regular Season'):
     return preprocess(r.json(), identifier=1)
     
 gamelog = {}
-for team_id in all_team_stats():
-    team_games = team_gamelog(team_id, '2013-14')
+teams = all_team_stats()
+for team_id in teams:
+    print 'getting games for {team}'.format(team=teams[team_id]['team_name'])
+    team_games = team_gamelog(team_id, '2010-11')
     for game_id in team_games:
         if not game_id in gamelog:
             gamelog[game_id] = {}
         gamelog[game_id][team_id] = team_games[game_id]
 
 pprint.pprint(gamelog)
+print len(gamelog.keys())

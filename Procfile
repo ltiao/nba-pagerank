@@ -1,0 +1,1 @@
+web: gunicorn nba_pagerank.wsgi
