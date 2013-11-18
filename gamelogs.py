@@ -12,28 +12,30 @@ def preprocess(raw_dict, identifier=0):
     headers = [h.lower() for h in raw_dict[u'resultSets'][-1][u'headers'][identifier+1:]]
     return dict((row[identifier], dict(zip(headers, row[identifier+1:]))) for row in raw_dict[u'resultSets'][-1][u'rowSet'])
 
-def all_team_stats():
+def all_team_stats(**kwargs):
     with open("teams_config.yaml", 'r') as infile:
         payload = yaml.load(infile)
-    # TODO: Use **kwargs to override dict values
+    payload.update(kwargs) # Update default parameters with kwargs
     r = requests.get('http://stats.nba.com/stats/leaguedashteamstats', params=payload)
-    return preprocess(r.json())
+    r.raise_for_status()
+    return preprocess(r.json())  
     
 def team_gamelog(team_id, season, season_type='Regular Season'):
-    # TODO: Use **kwargs here
+    # # TODO: Use **kwargs here
     payload = {
         'TeamID': team_id,
         'Season': season,
         'SeasonType': season_type,
     }
     r = requests.get('http://stats.nba.com/stats/teamgamelog', params=payload)
+    r.raise_for_status()
     return preprocess(r.json(), identifier=1)
-    
+
 gamelog = {}
 teams = all_team_stats()
 for team_id in teams:
     print 'getting games for {team}'.format(team=teams[team_id]['team_name'])
-    team_games = team_gamelog(team_id, '2010-11')
+    team_games = team_gamelog(team_id, '2013-14')
     for game_id in team_games:
         if not game_id in gamelog:
             gamelog[game_id] = {}
