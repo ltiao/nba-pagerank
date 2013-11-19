@@ -73,6 +73,9 @@ for team_id in teams:
         games[game_id][u'minutes'] = team_games[game_id].pop(u'min')
         games[game_id][team_id] = team_games[game_id]
         
+        if 'winner' in games[game_id] and 'loser' in games[game_id]:
+            G.add_edge(games[game_id]['loser'], games[game_id]['winner'], key=game_id, team_games[game_id])
+        
 pprint.pprint(games)
             
 exit(0)    
