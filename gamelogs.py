@@ -10,7 +10,7 @@ def preprocess(raw_dict, identifier=0):
     immediately after identifier is important
     """
     headers = [h.lower() for h in raw_dict[u'resultSets'][-1][u'headers'][identifier+1:]]
-    return dict((row[identifier], dict(zip(headers, row[identifier+1:]))) for row in raw_dict[u'resultSets'][-1][u'rowSet'])
+    return dict((int(row[identifier]), dict(zip(headers, row[identifier+1:]))) for row in raw_dict[u'resultSets'][-1][u'rowSet'])
 
 def all_team_stats(**kwargs):
     with open("teams_config.yaml", 'r') as infile:
@@ -74,10 +74,11 @@ for team_id in teams:
         games[game_id][team_id] = team_games[game_id]
         
         if 'winner' in games[game_id] and 'loser' in games[game_id]:
-            G.add_edge(games[game_id]['loser'], games[game_id]['winner'], key=game_id, team_games[game_id])
+            G.add_edge(games[game_id]['loser'], games[game_id]['winner'], game_id, games[game_id])
         
 pprint.pprint(games)
-            
+pprint.pprint(G.node[1610612747])
+
 exit(0)    
         
         # won = int(team_games[game_id][u'wl'] == 'W')
