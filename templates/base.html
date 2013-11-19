@@ -39,7 +39,7 @@
 
 			.container {
 			  width: auto;
-			  max-width: 680px;
+/*			  max-width: 680px;*/
 			  padding: 0 15px;
 			}
 			.container .credit {
@@ -81,7 +81,19 @@
 				<div class="page-header">
 					<h1>Ranking NBA Teams with Pagerank</h1>
 				</div>
-				<table class="table">
+				<p class="lead">Pin a fixed-height footer to the bottom of the viewport in desktop browsers with this custom HTML and CSS.</p>
+				<p>Use <a href="../sticky-footer-navbar">the sticky footer with a fixed navbar</a> if need be, too.</p>
+				<div id="test"></div>
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							{% for team in teams %}
+							<th>
+								<img src="http://stats.nba.com/media/logos/{{ team }}_25x25.png" alt="{{ team }}" class="img-rounded">
+							</th>
+							{% endfor %}
+						</tr>
+					</thead>
 					<tbody>
 						{% for row in data %}
 						<tr>
@@ -92,9 +104,6 @@
 						{% endfor %}
 					</tbody>
 				</table>
-				<p class="lead">Pin a fixed-height footer to the bottom of the viewport in desktop browsers with this custom HTML and CSS.</p>
-				<p>Use <a href="../sticky-footer-navbar">the sticky footer with a fixed navbar</a> if need be, too.</p>
-				<div id="test"></div>
 			</div>
 		</div>
 
