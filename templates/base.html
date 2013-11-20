@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>NBA Pagerank</title>
+		<title>{% block title %}NBA Pagerank{% endblock %}</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- Bootstrap -->
 		<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
 
+		{% block style %}
 	    <style>
 			/* Sticky footer styles
 			-------------------------------------------------- */
@@ -65,6 +66,7 @@
 			  stroke: #999;
 			}
 	    </style>
+		{% endblock %}
 
 		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -78,32 +80,14 @@
 		<div id="wrap">
 			<!-- Begin page content -->
 			<div class="container">
+				{% block content %}
 				<div class="page-header">
 					<h1>Ranking NBA Teams with Pagerank</h1>
 				</div>
 				<p class="lead">Pin a fixed-height footer to the bottom of the viewport in desktop browsers with this custom HTML and CSS.</p>
 				<p>Use <a href="../sticky-footer-navbar">the sticky footer with a fixed navbar</a> if need be, too.</p>
 				<div id="test"></div>
-				<table class="table table-bordered table-condensed">
-					<thead>
-						<tr>
-							{% for team in teams %}
-							<th>
-								<img src="http://stats.nba.com/media/logos/{{ team }}_25x25.png" alt="{{ team }}" class="img-rounded">
-							</th>
-							{% endfor %}
-						</tr>
-					</thead>
-					<tbody>
-						{% for row in data %}
-						<tr>
-							{% for col in row %}
-							<td>{{ col }}</td>
-							{% endfor %}
-						</tr>
-						{% endfor %}
-					</tbody>
-				</table>
+				{% endblock %}
 			</div>
 		</div>
 
@@ -118,6 +102,7 @@
 		<!-- Include all compiled plugins (below), or include individual files as needed -->
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
 		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+		{% block script %}
 		<script>
 
 		var width = 960,
@@ -202,5 +187,6 @@
 		}
 
 		</script>
+		{% endblock %}
 	</body>
 </html>

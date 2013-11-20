@@ -4,8 +4,8 @@ import datetime, redis, requests, requests_cache, pprint, yaml
 import networkx as nx
 
 redis = redis.from_url('redis://redistogo:d7a9d2fec3de08de3aa9a562cb34ad1e@beardfish.redistogo.com:10002/')
-requests_cache.install_cache('gamelog_cache', backend='redis', expire_after=24*60*60, connection=redis) # 1 day
-# requests_cache.install_cache('gamelog_cache', expire_after=24*60*60) # 1 day
+# requests_cache.install_cache('gamelog_cache', backend='redis', expire_after=24*60*60, connection=redis) # 1 day
+requests_cache.install_cache('gamelog_cache', expire_after=24*60*60) # 1 day
 
 def preprocess(raw_dict, identifier=0):
     """
@@ -13,7 +13,7 @@ def preprocess(raw_dict, identifier=0):
     immediately after identifier is important
     """
     headers = [h.lower() for h in raw_dict[u'resultSets'][-1][u'headers'][identifier+1:]]
-    return dict((int(row[identifier]), dict(zip(headers, row[identifier+1:]))) for row in raw_dict[u'resultSets'][-1][u'rowSet'])
+    return dict((row[identifier], dict(zip(headers, row[identifier+1:]))) for row in raw_dict[u'resultSets'][-1][u'rowSet'])
 
 def all_team_stats(**kwargs):
     with open("teams_config.yaml", 'r') as infile:
@@ -74,9 +74,10 @@ def graph(season='2013-14'):
             games[game_id][u'date'] = datetime.datetime.strptime(team_games[game_id].pop(u'game_date'), '%b %d, %Y').date()
             games[game_id][u'minutes'] = team_games[game_id].pop(u'min')
             games[game_id][team_id] = team_games[game_id]
-        
+            
             if 'winner' in games[game_id] and 'loser' in games[game_id]:
-                G.add_edge(games[game_id]['loser'], games[game_id]['winner'], game_id, games[game_id])
+                pts_differential = games[game_id][games[game_id]['winner']][u'pts'] - games[game_id][games[game_id]['loser']][u'pts']
+                G.add_edge(games[game_id]['loser'], games[game_id]['winner'], game_id, date=games[game_id][u'date'], pts_diff=pts_differential)#, games[game_id])
     return G
 
 # M = nx.pagerank_numpy(G, alpha=0.9)

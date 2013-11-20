@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<table class="table table-bordered table-condensed">
+	<thead>
+		<tr>
+			{% for team in teams %}
+			<th>
+				<img src="http://stats.nba.com/media/logos/{{ team }}_25x25.png" alt="{{ team }}" class="img-rounded">
+			</th>
+			{% endfor %}
+		</tr>
+	</thead>
+	<tbody>
+		{% for row in data %}
+		<tr>
+			{% for col in row %}
+			<td>{{ col }}</td>
+			{% endfor %}
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock %}
