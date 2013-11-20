@@ -1,11 +1,15 @@
 #!/usr/bin/python
 
-import datetime, redis, requests, requests_cache, pprint, yaml
+import datetime, os, redis, requests, requests_cache, pprint, yaml
 import networkx as nx
 
-redis = redis.from_url('redis://redistogo:d7a9d2fec3de08de3aa9a562cb34ad1e@beardfish.redistogo.com:10002/')
+if 'REDISTOGO_URL' in os.environ:
+    redis_url = os.environ.get('REDISTOGO_URL', 'redis://redistogo:d7a9d2fec3de08de3aa9a562cb34ad1e@beardfish.redistogo.com:10002/')
+    redis = redis.from_url(redis_url)
+    requests_cache.install_cache('gamelog_cache', backend='redis', expire_after=24*60*60, connection=redis) # 1 day
+else:
 # requests_cache.install_cache('gamelog_cache', backend='redis', expire_after=24*60*60, connection=redis) # 1 day
-requests_cache.install_cache('gamelog_cache', expire_after=24*60*60) # 1 day
+    requests_cache.install_cache('gamelog_cache', expire_after=24*60*60) # 1 day
 
 def preprocess(raw_dict, identifier=0):
     """
