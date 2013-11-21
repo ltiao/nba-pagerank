@@ -14,7 +14,7 @@ def visualize(request):
     return render(request, 'vis2.html')
         
 def xhr_graph_data(request):
-    G = graph('2013-14')
+    G = graph('2012-13')
     teams = ['MIA', 'ATL', 'CHA', 'ORL', 'WAS', 'IND', 'CHI', 'DET', 'CLE', 'MIL']
     H = G.subgraph([team_id for team_id in G.nodes() if G.node[team_id]['abbr'] in teams])
     data = json.dumps(json_graph.node_link_data(H), cls=DjangoJSONEncoder)

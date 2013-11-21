@@ -56,12 +56,14 @@ def team_detail(team_id):
     r.raise_for_status()
     return r.json()[u'TeamDetails'][0][u'Details'][0]
 
-def graph(season='2013-14'):
+def graph(season='2013-14', include=None, exclude=None, date_range=None):
     G = nx.MultiDiGraph()
     games = {}
-    teams = all_team_stats()
+    teams = all_team_stats(Season=season)
     for team_id in teams:
         detail = team_detail(team_id)
+        if include and not detail[u'Abbreviation'] in include: continue
+        if exclude and detail[u'Abbreviation'] in exclude: continue
         G.add_node(team_id, abbr=detail[u'Abbreviation'], city=detail[u'City'], nickname=detail[u'Nickname'])
         team_games = team_gamelog(team_id, season)
         for game_id in team_games:

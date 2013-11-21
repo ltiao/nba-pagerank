@@ -37,8 +37,9 @@ var svg = d3.select(".graph").append("svg")
 
 var force = d3.layout.force()
     .gravity(.05)
-    .linkDistance(60)
-    .charge(-300)
+    .linkDistance(100)
+	.distance(200)
+    .charge(-100)
     .size([width, height]);
 
 d3.json("{% url 'xhr_graph_data' %}?{{ request.GET.urlencode }}", function(error, json) {
@@ -50,7 +51,6 @@ d3.json("{% url 'xhr_graph_data' %}?{{ request.GET.urlencode }}", function(error
   var link = svg.selectAll(".link")
       .data(json.links)
     .enter().append("line")
-   .attr("d", "M20,20C400,20,20,400,400,400")
       .attr("class", "link");
 
   var node = svg.selectAll(".node")
