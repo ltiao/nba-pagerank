@@ -3,8 +3,16 @@
 import networkx as nx
 import StringIO
 from nba_pagerank.datasets.data import graph, team_detail
+from networkx.readwrite import json_graph
+import pprint
+
 
 G = graph('2013-14', include=['MIA', 'ATL', 'CHA', 'ORL', 'WAS', 'IND', 'CHI', 'DET', 'CLE', 'MIL', 'TOR', 'PHI', 'BOS', 'NYK', 'BKN'])
+
+data = json_graph.node_link_data(G)
+pprint.pprint(data)
+
+exit(0)
 
 import matplotlib.pyplot as plt
 
