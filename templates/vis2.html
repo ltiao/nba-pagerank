@@ -52,7 +52,7 @@ text.shadow {
 					<td>{{ team.in_deg }}</td>
 					<td>{{ team.out_deg }}</td>
 					<td>{{ team.pct|floatformat:3 }}</td>
-					<td>{{ team.pagerank|floatformat:3 }}</td>
+					<td>{{ widthratio team.pagerank 1 100 }}</td>
 				</tr>
 				{% endfor %}
 			</tbody>
