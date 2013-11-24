@@ -52,7 +52,7 @@ text.shadow {
 					<td>{{ team.in_deg }}</td>
 					<td>{{ team.out_deg }}</td>
 					<td>{{ team.pct|floatformat:3 }}</td>
-					<td>{{ widthratio team.pagerank 1 100 }}</td>
+					<td>{{ team.pagerank|floatformat:3 }}</td>
 				</tr>
 				{% endfor %}
 			</tbody>
@@ -72,8 +72,8 @@ var svg = d3.select(".graph")
     		.attr("height", height);
 
 var force = d3.layout.force()
-    			.gravity(.05)
-    			.linkDistance(200)
+    			.gravity(.01)
+    			.linkDistance(250)
 				.distance(250)
     			.charge(-150)
     			.size([width, height]);
