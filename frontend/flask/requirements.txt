@@ -1,0 +1,15 @@
+flask
+uwsgi
+redis
+
+celery
+
+requests
+requests-cache
+
+pyyaml
+
+numpy
+scipy
+pandas
+networkx

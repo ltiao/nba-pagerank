@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    run: frontend
+  name: frontend
+spec:
+  ports:
+  - nodePort: 32455
+    port: 32455
+    targetPort: 32455
+    protocol: TCP
+  selector:
+    run: frontend
+  type: LoadBalancer
+status:
+  loadBalancer: {}

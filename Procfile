@@ -1,1 +1,0 @@
-web: gunicorn --debug nba_pagerank.wsgi

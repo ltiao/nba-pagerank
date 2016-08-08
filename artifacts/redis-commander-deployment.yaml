@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    run: redis-commander
+  name: redis-commander
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: redis-commander
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: redis-commander
+    spec:
+      containers:
+      - image: tiao/redis-commander
+        imagePullPolicy: Never
+        name: redis-commander
+        ports:
+        - containerPort: 32512
+        resources: {}
+status: {}

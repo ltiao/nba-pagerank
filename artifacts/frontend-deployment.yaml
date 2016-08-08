@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    run: frontend
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: frontend
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: frontend
+    spec:
+      containers:
+      - name: frontend-nginx
+        image: tiao/nba-rank:frontend-nginx  
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 32455
+        resources: {}
+      - name: frontend-flask
+        image: tiao/nba-rank:frontend-flask 
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+        resources: {}
+status: {}
