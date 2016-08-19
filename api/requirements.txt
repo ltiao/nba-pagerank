@@ -6,6 +6,7 @@ celery
 
 requests
 requests-cache
+fake-useragent
 
 pyyaml
 

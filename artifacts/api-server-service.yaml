@@ -3,16 +3,14 @@ kind: Service
 metadata:
   creationTimestamp: null
   labels:
-    run: frontend
-  name: frontend
+    run: api-server
+  name: api-server
 spec:
   ports:
-  - port: 32455
-    targetPort: 32455
-    nodePort: 32455
+  - port: 8080
     protocol: TCP
+    targetPort: 8080
   selector:
-    run: frontend
-  type: LoadBalancer
+    run: api-server
 status:
   loadBalancer: {}
