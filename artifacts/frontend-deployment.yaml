@@ -21,6 +21,6 @@ spec:
       - image: tiao/nba-rank:frontend
         name: frontend
         ports:
-        - containerPort: 32455
+        - containerPort: 80
         resources: {}
 status: {}

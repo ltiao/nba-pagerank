@@ -1,0 +1,25 @@
+swagger: '2.0'
+info:
+  title: Parlmap API
+  version: 0.0.1
+paths:
+  /:
+    get:
+      summary: Teams Details
+      operationId: controller.test
+      parameters:
+      - name: league
+        in: query
+        description: League
+        required: true
+        type: string
+        default: NBA
+        enum:
+        - NBA
+        - ABA
+      responses:
+        200:
+          description: Task successfully created
+          schema:
+            type: string
+

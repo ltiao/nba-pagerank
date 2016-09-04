@@ -7,9 +7,8 @@ metadata:
   name: frontend
 spec:
   ports:
-  - port: 32455
-    targetPort: 32455
-    nodePort: 32455
+  - port: 80
+    targetPort: 80
     protocol: TCP
   selector:
     run: frontend
