@@ -4,16 +4,50 @@
    Author's custom styles
    ========================================================================== */
 
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f5f5f5;
+}
 
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
 
+.container {
+  width: auto;
+  max-width: 960px;
+  padding: 0 15px;
+}
+.container .text-muted {
+  margin: 20px 0;
+}
 
+/* D3 styles
+-------------------------------------------------- */
 
+.links line {
+  stroke: #999;
+  stroke-opacity: 0.6;
+}
 
-
-
-
-
-
+.nodes circle {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
 
 
 
