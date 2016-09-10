@@ -13,6 +13,6 @@ spec:
     protocol: TCP
   selector:
     run: redis-commander
-  type: LoadBalancer
+  type: NodePort
 status:
   loadBalancer: {}

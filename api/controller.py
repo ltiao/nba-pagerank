@@ -1,3 +1,5 @@
+import json
+
 from data import teams_details
 
 
@@ -9,6 +11,12 @@ league_mapping = {
 
 def test(league='NBA'):
     return teams_details().index.values.tolist()
+
+
+def miserables():
+    with open('miserables.json', 'r') as infile:
+        mis = json.load(infile)
+    return mis
 
 
 def trans_kwargs(trans={}):

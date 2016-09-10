@@ -3,6 +3,13 @@ info:
   title: Parlmap API
   version: 0.0.1
 paths:
+  /miserables:
+    get:
+      summary: Les Mis
+      operationId: controller.miserables
+      responses:
+        200:
+          description: Something
   /:
     get:
       summary: Teams Details
