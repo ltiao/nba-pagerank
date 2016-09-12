@@ -1,3 +1,9 @@
+import yaml
+import requests
+import requests_cache
+import pandas as pd
+import networkx as nx
+
 from fake_useragent import UserAgent
 from redis import StrictRedis
 
@@ -6,10 +12,6 @@ from operator import attrgetter
 
 from settings import REQUESTS_CACHE_BACKEND, REDIS_HOST, REDIS_PORT
 
-import yaml
-import requests
-import requests_cache
-import pandas as pd
 
 requests_cache.install_cache(
     'nba-rank',
@@ -66,8 +68,8 @@ get_json = partial(get_json, headers={'User-Agent': ua.google})
 @apply_to_output(to_data_frame,
                  frame_name='LeagueGameLog', frame_index='GAME_ID')
 @apply_to_output(normalize_dict)
-def games(league_id='00', season='2015-16', season_type='Regular Season',
-          team=True, sort_by='date', ascending=True):
+def games_df(league_id='00', season='2015-16', season_type='Regular Season',
+             team=True, sort_by='date', ascending=True):
 
     return get_json(url='http://stats.nba.com/stats/LeagueGameLog',
                     params={'LeagueID': league_id,
@@ -78,9 +80,47 @@ def games(league_id='00', season='2015-16', season_type='Regular Season',
                             'Direction': 'ASC' if ascending else 'DESC'})
 
 
-@apply_to_output(to_data_frame, frame_name='TeamYears', frame_index='TEAM_ID')
+def pivot_games_df(df):
+
+    # primary_columns = [
+    #     'TEAM_ID',
+    #     'FGM',
+    #     'FGA',
+    #     'FG3M',
+    #     'FG3A',
+    #     'FTM',
+    #     'FTA',
+    #     'OREB',
+    #     'DREB',
+    #     'AST',
+    #     'STL',
+    #     'BLK',
+    #     'TOV',
+    #     'PF',
+    #     'PTS',
+    # ]
+    primary_columns = 'TEAM_ABBREVIATION'
+
+    visitors = df[df['MATCHUP'].str.contains('@')]['TEAM_ABBREVIATION']
+
+    df['GAME_DATE'] = pd.to_datetime(df['GAME_DATE'], format='%Y-%m-%d')
+
+    df = df.reset_index('GAME_ID')
+
+    pivot_df = df.pivot_table(index=['GAME_ID', 'SEASON_ID', 'GAME_DATE', 'MIN'],
+                              columns='WL',
+                              values=primary_columns,
+                              aggfunc=lambda s: s.iloc[0])
+    pivot_df = pivot_df.reset_index(['SEASON_ID', 'GAME_DATE', 'MIN'])
+    pivot_df['VISITOR'] = visitors
+
+    return pivot_df
+
+
+@apply_to_output(to_data_frame,
+                 frame_name='TeamYears', frame_index='TEAM_ID')
 @apply_to_output(normalize_dict)
-def teams(league_id='00'):
+def teams_df(league_id='00'):
 
     # Make Request
     return get_json(url='http://stats.nba.com/stats/commonTeamYears',
@@ -88,10 +128,10 @@ def teams(league_id='00'):
 
 
 @apply_to_output(to_data_frame,
-                 frame_name='TeamInfoCommon', frame_index='TEAM_ID')
+                 frame_name='TeamInfoCommon', frame_index='TEAM_ABBREVIATION')
 @apply_to_output(normalize_dict)
-def team_details(team_id, league_id='00', season='2015-16',
-                 season_type='Regular Season'):
+def team_details_df(team_id, league_id='00', season='2015-16',
+                    season_type='Regular Season'):
 
     return get_json(url='http://stats.nba.com/stats/TeamInfoCommon',
                     params={'LeagueID': league_id,
@@ -100,11 +140,37 @@ def team_details(team_id, league_id='00', season='2015-16',
                             'SeasonType': season_type})
 
 
-def teams_details(league_id='00', season='2015-16',
-                  season_type='Regular Season'):
+def teams_details_df(league_id='00', season='2015-16',
+                     season_type='Regular Season'):
 
-    return pd.concat(map(partial(team_details,
+    return pd.concat(map(partial(team_details_df,
                                  league_id=league_id,
                                  season=season,
                                  season_type=season_type),
-                         teams(league_id=league_id).index))
+                         teams_df(league_id=league_id).index))
+
+
+def g(league_id='00', season='2015-16', season_type='Regular Season',
+      create_using=None):
+
+    if create_using is None:
+        create_using = nx.MultiDiGraph()
+
+    df = teams_details_df(league_id=league_id, season=season,
+                          season_type=season_type)
+
+    G = nx.convert._prep_create_using(create_using)
+    G.add_nodes_from(df.to_dict(orient='index').items())
+
+    H = nx.from_pandas_dataframe(df=pivot_games_df(
+                                      games_df(league_id=league_id,
+                                               season=season,
+                                               season_type=season_type)),
+                                 # source=('TEAM_ID', 'L'),
+                                 # target=('TEAM_ID', 'W'),
+                                 source='L',
+                                 target='W',
+                                 edge_attr=True,
+                                 create_using=nx.MultiDiGraph())
+
+    return nx.compose(G=G, H=H, name='win_loss_network')

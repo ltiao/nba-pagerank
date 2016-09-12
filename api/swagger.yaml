@@ -14,16 +14,6 @@ paths:
     get:
       summary: Teams Details
       operationId: controller.test
-      parameters:
-      - name: league
-        in: query
-        description: League
-        required: true
-        type: string
-        default: NBA
-        enum:
-        - NBA
-        - ABA
       responses:
         200:
           description: Task successfully created

@@ -1,8 +1,8 @@
 flask
 connexion
 uwsgi
-redis
 
+redis
 celery
 
 requests
@@ -14,4 +14,4 @@ pyyaml
 numpy
 scipy
 pandas
-networkx
+-e git+https://github.com/networkx/networkx.git@master#egg=networkx
